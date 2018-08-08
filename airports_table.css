@@ -1,0 +1,68 @@
+.buttons ul li {
+  list-style-type: none;
+  display: inline-block;
+  padding: 15px;
+}
+
+.buttons ul li button {
+  background-color: #181324;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+.buttons ul li button:hover {
+  background-color: #2f2a39;
+}
+
+ul.sub-buttons {
+  position: absolute;
+  display: none;
+}
+
+ul.sub-buttons li {
+  list-style-type: none;
+  display: block;
+  padding: 0px;
+  min-width: 100px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+ul.sub-buttons li button {
+  background-color: #f1f1f1;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  border-left: none;
+  border-right: none;
+  min-width: 100px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+ul.sub-buttons li button:hover {
+  background-color: #b9b8bd;
+}
+
+.buttons li:hover .sub-buttons {
+  display: block;
+}
+
+.submit {
+  margin-left: 85%;
+  margin-top: 30%;
+}
+
+.submit button {
+  background-color: #b9b8bd;
+  font-size: 18px;
+  padding: 13px 17px;
+  color: black;
+  border: none;
+}
+
+.submit button:hover {
+  background-color: #a9a9a9;
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="airports_table.css">
+    <title>Airport Table</title>
+  </head>
+  <body>
+  <!--    <form class="data">
+        <div class="dropdown">
+          <button class="dropbtn" id="1">Оператор
+            <div class="dropdown-content">
+              <button type="button" onclick="setOperator()" name="operator1">Оператор_1</button>
+              <button type="button" onclick="setOperator()" name="operator1">Оператор_2</button>
+              <button type="button" onclick="setOperator()" name="operator1">Оператор_3</button>
+            </div>
+          </button>
+
+          <button class="dropbtn" id="2">Час на кацане
+            <div class="dropdown-content">
+              <button type="button" onclick="setHours()" name="operator1">час_1</button>
+              <button type="button" onclick="setMinutes()" name="operator1">минути_2</button>
+            </div>
+          </button>
+        </div>
+    </form> -->
+
+  <form class="data">
+    <div class="buttons">
+      <ul>
+        <li><button type="button" id="operator" name="operator">Operator</button>
+          <ul class="sub-buttons">
+            <li><button type="button" id="operator1" onclick="setOperator(this.getAttribute('name'))" name="Operator_1">Operator_1</button></li>
+            <li><button type="button" id="operator2" onclick="setOperator(this.getAttribute('name'))" name="Operator_2">Operator_2</button></li>
+            <li><button type="button" id="operator3" onclick="setOperator(this.getAttribute('name'))" name="Operator_3">Operator_3</button></li>
+          </ul>
+        </li>
+        <li> <button type="button" id="airline" name="airline">Airline</button>
+          <ul class="sub-buttons">
+            <li><button type="button" onclick="setAirline(this.getAttribute('name'))" name="Airline_1">Airline_1</button></li>
+            <li><button type="button" onclick="setAirline(this.getAttribute('name'))" name="Airline_2">Airline_2</button></li>
+          </ul>
+        </li>
+        <li> <button type="button" id="deptTime" onclick="setDeptTime(this.getAttribute('id'))" name="deptTime">Department time</button>
+          <ul id="subButtons" class="sub-buttons">
+          </ul>
+        </li>
+        <li> <button type="button" id="arrvButton" onclick="setArrvTime(this.getAttribute('id'))" name="arrvTime">Arriving time</button>
+          <ul id="subButtons" class="sub-buttons">
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="submit">
+      <button type="button" onclick="getData()" name="submit">Submit</button>
+    </div>
+  </form>
+  <script type="text/javascript" src="airports_table.js"></script>
+  </body>
+</html>
