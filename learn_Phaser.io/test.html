@@ -1,11 +1,9 @@
 ﻿<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/phaser@3.12.0/dist/phaser.min.js"></script>
 </head>
 <body>
-    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/phaser@3.12.0/dist/phaser.min.js"></script>
     <script>
         let config = {
             type: Phaser.AUTO,
@@ -14,7 +12,7 @@
             physics: {
                 default: 'arcade',
                 arcade: {
-                    gravity: { y: 6000 },
+                    gravity: { y: 500 },
                     debug: false
                 }
             },
@@ -29,7 +27,7 @@
 
         let player
         let clouds = []
-        //let jump
+        let jump
         let platforms
         let cursors
 
@@ -38,16 +36,20 @@
             this.load.image('sky', 'assets/skies/gradient11.png')
             this.load.image('cloud', 'assets/particles/cloud.png')
             this.load.spritesheet('dude', 'assets/sprites/dude.png', {frameWidth: 32, frameHeight: 48})
-            this.load.image('spaceBaddie', 'assets/sprites/space-baddie.png')
             this.load.image('platform1', 'assets/sets/objects/platform1.png')
             this.load.image('platform2', 'assets/sets/objects/platform2.png')
             this.load.image('platform3', 'assets/sets/objects/platform3.png')
-            this.load.image('mushroom', 'assets/sets/objects/mushroom2.png')
+            this.load.image('mushroom2', 'assets/sets/objects/mushroom2.png')
+            this.load.image('mushroom1', 'assets/sets/objects/mushroom1.png')
+
+            //this.load.image('sky', 'assets/skies/sky3.png');
+            //this.load.image('ground', 'assets/sprites/platform.png');
+
         }
 
         function create() {
 
-            this.add.sprite(400, 300, 'sky')
+            this.add.image(400, 300, 'sky')
             clouds = this.physics.add.staticGroup({ key: 'cloud', repeat: 3 })
 
             clouds.children.iterate(cloud => {
@@ -57,56 +59,63 @@
 
             platforms = this.physics.add.staticGroup()
             platforms.create(400, 550, 'platform3')
-            platforms.create(200, 350, 'platform2')
-            platforms.create(500, 200, 'platform1')
+            platforms.create(194, 400, 'platform2')
+            platforms.create(570, 260, 'platform1')
+            platforms.create(220, 160, 'platform1')
+
             platforms.allowGravity = false
 
-            this.add.sprite(210, 495, 'mushroom')
+            this.add.sprite(210, 495, 'mushroom2')
+            this.add.sprite(645, 201, 'mushroom1')
 
-            player = this.physics.add.sprite(400, 479, 'dude')
-            
+            player = this.physics.add.sprite(450, 470, 'dude').setActive().setVelocity(0, 0).setBounce(0.2)
+
+            player.scaleX = 1.2
+            player.scaleY = 1.2
+
+            player.setCollideWorldBounds(true)
+            this.physics.add.collider(platforms, player)
+
+
             this.anims.create({
                 key: 'left',
-                frames: this.anims.generateFrameNumbers('dude', { start: 1, end: 2 })
-                //frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 })
+                frames: this.anims.generateFrameNumbers('dude', { start: 1, end: 2 }),
+                frameRate: 10,
+                repeat: -1
             });
             this.anims.create({
                 key: 'right',
                 frames: this.anims.generateFrameNumbers("dude", { start: 6, end: 7 }),
-                //frames: this.anims.generateFrameNumbers('dude', {start: 5, end: 8}),
-
+                frameRate: 10,
+                repeat: -1
             });
             this.anims.create({
                 key: 'turn',
-                frames: this.anims.generateFrameNumbers('dude', {start: 4, end: 4 })
+                frames: [{key: 'dude', frame: 4}]
             })
 
-            player.setCollideWorldBounds(true)
-
-            this.physics.add.collider(player, platforms)
-
-            //jump = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACEBAR);
+            jump = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
             cursors = this.input.keyboard.createCursorKeys()
-
         }
-
+        
         function update() {
-            player.setVelocity(0, 0)
+
             if (cursors.left.isDown) {
-                player.setVelocityX(-150)
-                player.anims.play('left');
+                player.setVelocityX(-215)
+                player.anims.play('left')
             }
             else if (cursors.right.isDown) {
-                player.setVelocityX(150)
-                player.anims.play('right');
+                player.setVelocityX(215)
+                player.anims.play('right')
             }
             else {
+                player.setVelocityX(0)
                 player.anims.play('turn')
             }
-            if (cursors.up.isDown/* && player.body.touching.down*/) {
-                player.setVelocityY(-350)
-            }
 
+            if (jump.isDown && player.body.touching.down) {
+                player.setVelocityY(-400)
+            }
         }
 
     </script>
