@@ -12,7 +12,7 @@
             physics: {
                 default: 'arcade',
                 arcade: {
-                    gravity: { y: 500 },
+                    gravity: { y: 300 },
                     debug: false
                 }
             },
@@ -28,8 +28,22 @@
         let player
         let clouds = []
         let jump
-        let platforms
+
+        let platforms1
+        let platforms2
+        let platforms3
+
+        let mushrooms1
+        let mushrooms2
+
         let cursors
+        let gameStart = false
+
+        let score = 0
+        let scoreText
+
+        const minPlayerPositionY = 570
+        let gameOverText
 
         function preload() {
             this.load.setBaseURL('http://labs.phaser.io')
@@ -42,6 +56,11 @@
             this.load.image('mushroom2', 'assets/sets/objects/mushroom2.png')
             this.load.image('mushroom1', 'assets/sets/objects/mushroom1.png')
         }
+        
+        function hitPlatform(player, platform) {
+            score += 10
+            scoreText.setText('Score: ' + score)
+        }
 
         function create() {
 
@@ -53,26 +72,69 @@
                 cloud.setY(Phaser.Math.FloatBetween(15, config.height - 70))
             })
 
-            platforms = this.physics.add.staticGroup()
-            platforms.create(400, 550, 'platform3')
-            platforms.create(194, 400, 'platform2')
-            platforms.create(570, 260, 'platform1')
-            platforms.create(220, 160, 'platform1')
+            platforms3 = this.physics.add.group({
+                key: 'platform3',
+                frameQuantity: 10,
+                setXY: {x: 400, y: 550, stepY: -460, stepX: -1},
+                immovable: true
+            })
 
-            platforms.allowGravity = false
+            platforms2 = this.physics.add.group({
+                key: 'platform2',
+                frameQuantity: 10,
+                setXY: { x: 194, y: 400, stepY: -460, stepX: 4 },
+                immovable: true
+            })
 
-            this.add.sprite(210, 495, 'mushroom2')
-            this.add.sprite(645, 201, 'mushroom1')
+            platforms1 = this.physics.add.group({
+                key: 'platform1',
+                frameQuantity: 10,
+                setXY: { x: 570, y: 260, stepY: -460, stepX: 2 },
+                immovable: true
+            })
+           
+            platforms1.children.iterate(child => {
+                child.body.allowGravity = false
+            })
 
-            player = this.physics.add.sprite(450, 470, 'dude').setActive().setVelocity(0, 0).setBounce(0.2)
+            platforms2.children.iterate(child => {
+                child.body.allowGravity = false
+            })
+
+            platforms3.children.iterate(child => {
+                child.body.allowGravity = false
+            })
+
+            mushrooms2 = this.physics.add.group({
+                key: 'mushroom2',
+                frameQuantity: 5,
+                setXY: { x: 210, y: 495, stepY: -920, stepX: 10 }, 
+                immovable: true
+            })
+
+            mushrooms1 = this.physics.add.group({
+                key: 'mushroom1',
+                frameQuantity: 5,
+                setXY: { x: 645, y: 201, stepY: -920, stepX: 5 },
+                immovable: true
+            })
+
+            mushrooms1.children.iterate(child => {
+                child.body.allowGravity = false
+            })
+
+            mushrooms2.children.iterate(child => {
+                child.body.allowGravity = false
+            })
+
+            player = this.physics.add.sprite(450, 478, 'dude')
+                .setActive()
+                .setVelocity(0, 0)
+                .setCollideWorldBounds(true)
 
             player.scaleX = 1.2
             player.scaleY = 1.2
-
-            player.setCollideWorldBounds(true)
-            this.physics.add.collider(platforms, player)
-
-
+            
             this.anims.create({
                 key: 'left',
                 frames: this.anims.generateFrameNumbers('dude', { start: 1, end: 2 }),
@@ -90,10 +152,20 @@
                 frames: [{key: 'dude', frame: 4}]
             })
 
+            this.physics.add.collider(platforms1, player)
+            this.physics.add.collider(platforms2, player)
+            this.physics.add.collider(platforms3, player)
+
+            this.physics.add.overlap(player, platforms1, hitPlatform, null, this)
+            this.physics.add.overlap(player, platforms2, hitPlatform, null, this)
+            this.physics.add.overlap(player, platforms3, hitPlatform, null, this)
+
             jump = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
             cursors = this.input.keyboard.createCursorKeys()
+
+            scoreText = this.add.text(16, 16, 'Score: ' + score, { font: '20px Arial Black, Gadget, sans-serif', fill: '#3d2a1d' });
         }
-        
+
         function update() {
 
             if (cursors.left.isDown) {
@@ -110,10 +182,38 @@
             }
 
             if (jump.isDown && player.body.touching.down) {
-                player.setVelocityY(-400)
+                player.setVelocityY(-290)             
+
+                if (!gameStart) {
+                    gameStart = true
+                    platforms1.children.iterate(child => {
+                        child.setVelocityY(75)
+                    })
+
+                    platforms2.children.iterate(child => {
+                        child.setVelocityY(75)
+                    })
+
+                    platforms3.children.iterate(child => {
+                        child.setVelocityY(75)
+                    })
+
+                    mushrooms1.children.iterate(child => {
+                        child.setVelocityY(75)
+                    })
+
+                    mushrooms2.children.iterate(child => {
+                        child.setVelocityY(75)
+                    })
+                }
+            }
+
+            if (player.y > minPlayerPositionY) {
+                this.physics.pause()
+                player.anims.play('turn')
+                gameOverText = this.add.text(230, 290, 'GAME OVER', { font: '50px Arial Black, Gadget, sans-serif', fill: '#3d2a1d' })
             }
         }
-
     </script>
 </body>
 </html>
